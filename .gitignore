@@ -1,0 +1,9 @@
+/build*/
+/upstream/
+/.venv/
+/.vs/
+/install*/
+/test-results/
+CMakeUserPresets.json
+__pycache__/
+*.pyc

@@ -1,0 +1,8 @@
+{
+  "sdk_version": "@PROJECT_VERSION@",
+  "upstream_revision": "@NDLESS_UPSTREAM_REVISION@",
+  "compiler_id": "@CMAKE_C_COMPILER_ID@",
+  "compiler_version": "@CMAKE_C_COMPILER_VERSION@",
+  "target": "arm-none-eabi",
+  "includes_prebuilt_sdl": "@NDLESS_WITH_SDL@"
+}

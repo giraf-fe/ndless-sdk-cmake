@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/ndless-nspire/Ndless.git",
+  "commit": "c659d1691295dd5db79ab171fff680638ca6a4bf",
+  "submodules": [
+    "ndless-sdk/thirdparty/nspire-io",
+    "ndless-sdk/thirdparty/zlib"
+  ]
+}

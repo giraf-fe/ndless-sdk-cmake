@@ -1,0 +1,47 @@
+{
+  "host": {
+    "system": "Windows",
+    "machine": "AMD64",
+    "python": "3.13.2",
+    "cmake": "cmake version 4.4.0-rc2"
+  },
+  "sdk_build": {
+    "sdk_version": "0.1.0",
+    "upstream_revision": "9484d8da7c7a4dde9766138c2e42e1d1e3acfcd4",
+    "compiler_id": "GNU",
+    "compiler_version": "14.2.1",
+    "target": "arm-none-eabi",
+    "includes_prebuilt_sdl": "ON"
+  },
+  "generator": "Ninja",
+  "config": "Debug",
+  "upstream": "9484d8da7c7a4dde9766138c2e42e1d1e3acfcd4",
+  "sample_zehn_sizes": {
+    "helloworld-cpp": 190016,
+    "helloworld-sdl": 269996,
+    "newlib": 75520,
+    "newlib-cpp": 946384,
+    "ngc_demo": 31292
+  },
+  "checks": [
+    "build/install",
+    "generated-file recovery",
+    "five samples",
+    "metadata",
+    "C/C++/ASM",
+    "startup entry/order",
+    "syscall wrapper coverage",
+    "no global link override",
+    "compression",
+    "post-link ordering",
+    "non-mutating patches",
+    "failure safety",
+    "no-op rebuild",
+    "deleted TNS recovery",
+    "patch/converter dependencies",
+    "spaces in paths",
+    "relocated package without original source/build",
+    "legacy config paths",
+    "upstream untouched"
+  ]
+}

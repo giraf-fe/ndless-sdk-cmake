@@ -1,0 +1,10 @@
+/*
+ * syscalls_stdlib.cpp.in — Build-tree wrapper for upstream libsyscalls/stdlib.cpp.
+ *
+ * Step 1: Include <sys/param.h> so PATH_MAX is defined even when compiling
+ *         against bare-metal Newlib headers whose <limits.h> omits PATH_MAX.
+ * Step 2: Include the unmodified upstream stdlib.cpp implementation.
+ */
+
+#include <sys/param.h>
+#include "@sdk@/libsyscalls/stdlib.cpp"

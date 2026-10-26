@@ -1,0 +1,33 @@
+{
+  "generator": "Ninja Multi-Config",
+  "config": "Debug",
+  "upstream": "9484d8da7c7a4dde9766138c2e42e1d1e3acfcd4",
+  "sample_zehn_sizes": {
+    "helloworld-cpp": 113048,
+    "helloworld-sdl": 246636,
+    "newlib": 65076,
+    "newlib-cpp": 815956,
+    "ngc_demo": 30536
+  },
+  "checks": [
+    "build/install",
+    "generated-file recovery",
+    "five samples",
+    "metadata",
+    "C/C++/ASM",
+    "startup entry/order",
+    "syscall wrapper coverage",
+    "no global link override",
+    "compression",
+    "post-link ordering",
+    "non-mutating patches",
+    "failure safety",
+    "no-op rebuild",
+    "deleted TNS recovery",
+    "patch/converter dependencies",
+    "spaces in paths",
+    "relocated package without original source/build",
+    "legacy config paths",
+    "upstream untouched"
+  ]
+}

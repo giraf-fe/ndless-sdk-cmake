@@ -1,0 +1,62 @@
+# ==============================================================================
+# Linux SDK Integration CI Workflow
+# ==============================================================================
+# Runs Python tool unit tests and full SDK build/install/relocation/incremental
+# integration tests across Ninja, Unix Makefiles, and Ninja Multi-Config.
+# ==============================================================================
+
+name: Linux SDK integration
+
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - generator: Ninja
+            config: Release
+          - generator: Unix Makefiles
+            config: Release
+          - generator: Ninja Multi-Config
+            config: Debug
+
+    steps:
+      # Step 1: Check out the repository.
+      - uses: actions/checkout@v4
+
+      # Step 2: Build the Linux ARM cross-compilation test container.
+      - name: Build Linux test environment
+        run: docker build -f docker/Dockerfile -t ndless-cmake-test .
+
+      # Step 3: Fetch pinned upstream sources and run unit + integration tests.
+      - name: Run tool and integration tests
+        run: |
+          mkdir -p test-results
+          docker run --rm \
+            -e TEST_GENERATOR='${{ matrix.generator }}' \
+            -e TEST_CONFIG='${{ matrix.config }}' \
+            -v "$PWD/test-results:/results" ndless-cmake-test bash -lc '
+              set -eu
+              cd /opt/ndless-sdk-cmake
+              python3 scripts/fetch_upstream.py --destination /workspace/upstream
+              python3 -m unittest discover -s tests -p "test_*.py" -v
+              python3 tests/integration.py --upstream /workspace/upstream \
+                --work-dir /results/run --generator "$TEST_GENERATOR" --config "$TEST_CONFIG"
+            '
+
+      # Step 4: Upload the generated JSON test report artifact.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-${{ strategy.job-index }}
+          path: test-results/run/report.json
+          if-no-files-found: ignore

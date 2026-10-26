@@ -1,0 +1,8 @@
+.git
+upstream
+build*
+install*
+.venv
+.vs
+**/__pycache__
+**/*.pyc

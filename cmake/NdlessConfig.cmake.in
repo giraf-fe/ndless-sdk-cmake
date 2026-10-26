@@ -1,0 +1,84 @@
+# ==============================================================================
+# Ndless CMake Package Configuration File
+# ==============================================================================
+# Consumed via:
+#   find_package(Ndless 0.1 CONFIG REQUIRED)
+#
+# Provides imported targets (Ndless::sdk, Ndless::ndls, Ndless::syscalls,
+# Ndless::syscalls_nspireio, Ndless::nspireio, Ndless::zlib, and optional
+# Ndless::SDL*) plus the add_nspire_program() helper.
+# ==============================================================================
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# ------------------------------------------------------------------------------
+# Step 1: Locate host Python 3.8+ and verify pyelftools availability
+# ------------------------------------------------------------------------------
+# Consumer builds invoke Python scripts (package_program.py, genzehn.py,
+# make_prg.py) to convert linked ARM ELF binaries into .tns executables.
+#
+# Both Python venv and Conda environments are supported:
+#   - Active venv (VIRTUAL_ENV) or Conda (CONDA_PREFIX) environments are
+#     discovered automatically by CMake's FindPython3 module.
+#   - Specific environments can also be selected via -DPython3_EXECUTABLE=<path>
+#     or -DPython3_ROOT_DIR=<env-prefix>.
+find_dependency(Python3 3.8 COMPONENTS Interpreter)
+
+execute_process(
+    COMMAND "${Python3_EXECUTABLE}" -c "import elftools"
+    RESULT_VARIABLE _Ndless_python_status
+    ERROR_QUIET
+)
+if(NOT _Ndless_python_status EQUAL 0)
+    set(Ndless_FOUND FALSE)
+    set(Ndless_NOT_FOUND_MESSAGE
+        "${Python3_EXECUTABLE} needs pyelftools; "
+        "install it into the selected Python (venv or conda) environment"
+    )
+    return()
+endif()
+
+# ------------------------------------------------------------------------------
+# Step 2: Resolve relocatable SDK root directory
+# ------------------------------------------------------------------------------
+# Compute the install prefix directly from CMAKE_CURRENT_LIST_DIR because
+# find_dependency() calls above may overwrite PACKAGE_PREFIX_DIR on CMake < 3.30.
+get_filename_component(_Ndless_root "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+
+# ------------------------------------------------------------------------------
+# Step 3: Load exported SDK targets
+# ------------------------------------------------------------------------------
+if(NOT TARGET Ndless::sdk)
+    include("${CMAKE_CURRENT_LIST_DIR}/NdlessTargets.cmake")
+    set_property(TARGET Ndless::sdk PROPERTY NDLESS_SDK_ROOT "${_Ndless_root}")
+endif()
+
+# ------------------------------------------------------------------------------
+# Step 4: Register optional prebuilt nSDL static library targets
+# ------------------------------------------------------------------------------
+if(@NDLESS_WITH_SDL@)
+    foreach(_lib IN ITEMS SDL SDL_gfx SDL_image)
+        if(NOT TARGET Ndless::${_lib})
+            add_library(Ndless::${_lib} STATIC IMPORTED)
+            set_target_properties(Ndless::${_lib} PROPERTIES
+                IMPORTED_LOCATION "${_Ndless_root}/lib/lib${_lib}.a"
+                INTERFACE_LINK_LIBRARIES Ndless::sdk
+            )
+        endif()
+    endforeach()
+endif()
+
+# ------------------------------------------------------------------------------
+# Step 5: Expose legacy variables and program packaging helpers
+# ------------------------------------------------------------------------------
+set(Ndless_INCLUDE_DIRS "${_Ndless_root}/include")
+set(Ndless_LIBRARY_DIRS "${_Ndless_root}/lib")
+set(NDLESS_SDK_DIR "${_Ndless_root}")
+set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+set(Ndless_HAS_POST_LINK TRUE)
+
+include("${CMAKE_CURRENT_LIST_DIR}/NdlessPrograms.cmake")
+
+check_required_components(Ndless)
