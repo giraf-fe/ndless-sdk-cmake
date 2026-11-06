@@ -12,6 +12,11 @@
 #include <string>
 #include <vector>
 
+/* The program's own -O2 (CMakeLists.txt) must override the SDK's default -Os. */
+#ifdef __OPTIMIZE_SIZE__
+#error "add_nspire_program's default -Os overrode the program's own -O2"
+#endif
+
 /* Step 1: Define a type with non-trivial construction and destruction. */
 struct Lifetime {
     std::string message{"constructor"};

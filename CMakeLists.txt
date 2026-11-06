@@ -351,7 +351,10 @@ endforeach()
 # Step 10: Define exported SDK interface and install SDK artifacts
 # ------------------------------------------------------------------------------
 # sdk_interface (exported as Ndless::sdk) describes consumer compile flags and
-# include directories only, never global link rules.
+# include directories only, never global link rules. It sets no optimization
+# level: interface options follow a consumer's own options on the command line,
+# so an -Os here would override every program's -O2/-O3. add_nspire_program()
+# adds the default -Os as the program's first option instead.
 add_library(sdk_interface INTERFACE)
 set_target_properties(sdk_interface PROPERTIES EXPORT_NAME sdk)
 target_include_directories(sdk_interface INTERFACE "$<INSTALL_INTERFACE:include>")
@@ -360,8 +363,6 @@ target_compile_options(sdk_interface INTERFACE
     -mcpu=arm926ej-s
     -marm
     -Wall
-    "$<$<CONFIG:Release>:-Os>"
-    "$<$<CONFIG:MinSizeRel>:-Os>"
 )
 
 foreach(_library IN ITEMS ndls syscalls syscalls_nspireio nspireio zlib)

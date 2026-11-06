@@ -150,6 +150,9 @@ also pass `-DNDLESS_SOURCE_DIR=<upstream-checkout>`.
 
 - `add_nspire_program`: `SOURCES`, `LIBRARIES`, `NAME`, `AUTHOR`, `VERSION`,
   `NOTICE`, `NDLESS_MIN`, `GENZEHN_FLAGS`, `USE_NSPIREIO`, `GC_SECTIONS`.
+  Release and MinSizeRel programs default to `-Os`, as upstream's Makefile
+  template does; an `-O` option the program adds with `target_compile_options`
+  overrides it. `Ndless::sdk` itself sets no optimization level.
 - Exported targets: `Ndless::sdk`, `Ndless::ndls`, `Ndless::syscalls`,
   `Ndless::syscalls_nspireio`, `Ndless::nspireio`, `Ndless::zlib`.
 - Optional prebuilt targets: `Ndless::SDL`, `Ndless::SDL_gfx`, `Ndless::SDL_image`.

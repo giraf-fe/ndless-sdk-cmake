@@ -99,6 +99,15 @@ function(add_nspire_program name)
     set_target_properties(${name} PROPERTIES SUFFIX .elf)
     target_link_libraries(${name} PRIVATE Ndless::sdk)
 
+    # The upstream Makefile template's default optimization. As the target's
+    # first own option it precedes any target_compile_options() the caller
+    # adds afterwards, so a program's own -O level wins (on Ndless::sdk it
+    # would come last and override it).
+    target_compile_options(${name} PRIVATE
+        "$<$<CONFIG:Release>:-Os>"
+        "$<$<CONFIG:MinSizeRel>:-Os>"
+    )
+
     # --------------------------------------------------------------------------
     # Step 4: Configure bare-metal startup objects and linker flags
     # --------------------------------------------------------------------------

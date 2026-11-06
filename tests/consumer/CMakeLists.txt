@@ -60,6 +60,9 @@ add_nspire_program(
     USE_NSPIREIO
 )
 target_compile_features(constructors PRIVATE cxx_std_17)
+# A program's own optimization level overrides the SDK default (-Os in
+# Release); constructors.cpp fails to compile if it doesn't.
+target_compile_options(constructors PRIVATE -O2)
 
 # ------------------------------------------------------------------------------
 # Step 4: Build an unrelated bare-metal target to verify link isolation

@@ -11,6 +11,11 @@
 #include <libndls.h>
 #include <stdlib.h>
 
+/* Without an -O option of its own, a Release program gets the SDK's -Os. */
+#if defined(NDEBUG) && !defined(__OPTIMIZE_SIZE__)
+#error "a Release program without its own -O option should build at -Os"
+#endif
+
 /* Marker value modified in staged ELF copies by tests/consumer/patch.py. */
 volatile unsigned patch_marker = 0x12345678;
 
