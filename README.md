@@ -1,5 +1,10 @@
 # ndless-sdk-cmake
 
+An update to [ndless-sdk-windows](https://github.com/giraf-fe/ndless-sdk-windows)!
+But this time made by Argon, not 3.5 Flash.
+
+---
+
 Experimental, host-independent CMake build/install layer for the TI-Nspire
 Ndless SDK. Native Windows, Linux, and macOS are the intended hosts; the target
 is always ARM GNU `arm-none-eabi`, not the host compiler.
