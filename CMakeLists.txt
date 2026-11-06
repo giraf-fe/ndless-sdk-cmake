@@ -433,7 +433,7 @@ install(
     DESTINATION share/ndless/licenses
     RENAME zlib-README
 )
-install(FILES THIRD_PARTY.md DESTINATION share/ndless/licenses)
+install(FILES LICENSE THIRD_PARTY.md DESTINATION share/ndless/licenses)
 
 # ------------------------------------------------------------------------------
 # Step 11: Generate and install CMake package configuration files
